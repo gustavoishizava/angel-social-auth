@@ -10,4 +10,9 @@
     <ProjectReference Include="../Angel.Social.Authentication.Core/Angel.Social.Authentication.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Constants/" />
+    <Folder Include="Services/" />
+  </ItemGroup>
+
 </Project>

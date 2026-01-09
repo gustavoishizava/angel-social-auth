@@ -2,11 +2,11 @@ using Angel.Social.Authentication.Core.ValueObjects;
 
 namespace Angel.Social.Authentication.Core.Services;
 
-public interface IAuthenticationService<TOAuthRequest, TResponse>
+public interface IAuthenticationService<TOAuthRequest, TAccessTokenResponse>
     where TOAuthRequest : class
-    where TResponse : class
+    where TAccessTokenResponse : class
 {
-    Task<AuthResponse<TResponse>> AuthenticateAsync(
+    Task<TAccessTokenResponse> AuthenticateAsync(
         SignInCode signInCode,
         CancellationToken cancellationToken = default);
 

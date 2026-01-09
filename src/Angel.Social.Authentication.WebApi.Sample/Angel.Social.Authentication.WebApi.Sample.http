@@ -1,0 +1,6 @@
+@Angel.Social.Authentication.WebApi.Sample_HostAddress = http://localhost:5223
+
+GET {{Angel.Social.Authentication.WebApi.Sample_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

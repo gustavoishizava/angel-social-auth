@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angel.Social.Authentication
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angel.Social.Authentication.Google", "Angel.Social.Authentication.Google\Angel.Social.Authentication.Google.csproj", "{79342E1D-3495-4CFC-8241-BB1679BBE35A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Angel.Social.Authentication.WebApi.Sample", "Angel.Social.Authentication.WebApi.Sample\Angel.Social.Authentication.WebApi.Sample.csproj", "{AD953FBA-DF64-42D1-9890-5C588708ABCB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,18 @@ Global
 		{79342E1D-3495-4CFC-8241-BB1679BBE35A}.Release|x64.Build.0 = Release|Any CPU
 		{79342E1D-3495-4CFC-8241-BB1679BBE35A}.Release|x86.ActiveCfg = Release|Any CPU
 		{79342E1D-3495-4CFC-8241-BB1679BBE35A}.Release|x86.Build.0 = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|x64.Build.0 = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Debug|x86.Build.0 = Debug|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|x64.ActiveCfg = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|x64.Build.0 = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|x86.ActiveCfg = Release|Any CPU
+		{AD953FBA-DF64-42D1-9890-5C588708ABCB}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

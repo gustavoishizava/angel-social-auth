@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddHttpClient<IGoogleAuthentication, GoogleAuthentication>();
+builder.Services.AddHttpClient<IGoogleProvider, GoogleProvider>();
 builder.Services.Configure<ClientCredential>(
     ClientCredential.GoogleKey,
     builder.Configuration.GetSection("GoogleCredentials"));
@@ -31,7 +31,7 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/test", (IGoogleAuthentication googleAuthentication) =>
+app.MapGet("/test", (IGoogleProvider googleAuthentication) =>
 {
     var request = new GoogleOAuthRequestUrl
     {
@@ -48,7 +48,7 @@ app.MapGet("/test", (IGoogleAuthentication googleAuthentication) =>
 })
 .WithName("GetWeatherForecast");
 
-app.MapGet("/token", async (IGoogleAuthentication googleAuthentication,
+app.MapGet("/token", async (IGoogleProvider googleAuthentication,
     [FromQuery] string code) =>
 {
     var request = new SignInCode
@@ -61,20 +61,20 @@ app.MapGet("/token", async (IGoogleAuthentication googleAuthentication,
     return await googleAuthentication.GetAccessTokenAsync(request);
 });
 
-app.MapGet("/refresh", async (IGoogleAuthentication googleAuthentication,
+app.MapGet("/refresh", async (IGoogleProvider googleAuthentication,
     [FromQuery] string refreshToken) =>
 {
     return await googleAuthentication.RefreshAccessTokenAsync(refreshToken);
 });
 
-app.MapGet("/revoke", async (IGoogleAuthentication googleAuthentication,
+app.MapGet("/revoke", async (IGoogleProvider googleAuthentication,
     [FromQuery] string accessToken) =>
 {
     await googleAuthentication.RevokeAccessTokenAsync(accessToken);
     return Results.Ok("Access token revoked successfully.");
 });
 
-app.MapGet("/user-info", async (IGoogleAuthentication googleAuthentication,
+app.MapGet("/user-info", async (IGoogleProvider googleAuthentication,
     [FromQuery] string accessToken) =>
 {
     return await googleAuthentication.GetUserAsync<GooglerUser>(accessToken);

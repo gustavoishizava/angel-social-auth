@@ -11,11 +11,11 @@ using Microsoft.Extensions.Options;
 
 namespace Angel.Social.Authentication.Google.Services;
 
-public sealed class GoogleAuthentication(
-    ILogger<GoogleAuthentication> logger,
+public sealed class GoogleProvider(
+    ILogger<GoogleProvider> logger,
     HttpClient httpClient,
     IOptionsSnapshot<ClientCredential> options)
-    : IGoogleAuthentication
+    : IGoogleProvider
 {
     private readonly ClientCredential clientCredential = options.Get(ClientCredential.GoogleKey);
 

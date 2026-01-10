@@ -3,7 +3,7 @@ using Angel.Social.Authentication.Google.ValueObjects;
 
 namespace Angel.Social.Authentication.Google.Services;
 
-public interface IGoogleAuthentication
-    : IAuthenticationService<GoogleOAuthRequestUrl, GoogleAccessTokenResponse>
+public interface IGoogleProvider
+    : IExternalProvider<GoogleOAuthRequestUrl, GoogleAccessTokenResponse>
 {
 }

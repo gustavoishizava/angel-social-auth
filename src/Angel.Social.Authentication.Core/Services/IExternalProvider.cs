@@ -2,7 +2,7 @@ using Angel.Social.Authentication.Core.ValueObjects;
 
 namespace Angel.Social.Authentication.Core.Services;
 
-public interface IAuthenticationService<TOAuthRequest, TAccessTokenResponse>
+public interface IExternalProvider<TOAuthRequest, TAccessTokenResponse>
     where TOAuthRequest : class
     where TAccessTokenResponse : class
 {

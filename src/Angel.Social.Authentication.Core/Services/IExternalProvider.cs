@@ -2,15 +2,15 @@ using Angel.Social.Authentication.Core.ValueObjects;
 
 namespace Angel.Social.Authentication.Core.Services;
 
-public interface IExternalProvider<TOAuthRequest, TAccessTokenResponse>
+public interface IExternalProvider<TOAuthRequest, TOAuthResponse>
     where TOAuthRequest : class
-    where TAccessTokenResponse : class
+    where TOAuthResponse : class
 {
-    Task<TAccessTokenResponse> GetAccessTokenAsync(
+    Task<TOAuthResponse> GetAccessTokenAsync(
         SignInCode signInCode,
         CancellationToken cancellationToken = default);
 
-    Task<TAccessTokenResponse> RefreshAccessTokenAsync(
+    Task<TOAuthResponse> RefreshAccessTokenAsync(
         string refreshToken,
         CancellationToken cancellationToken = default);
 

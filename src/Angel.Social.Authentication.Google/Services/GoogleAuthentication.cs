@@ -117,4 +117,30 @@ public sealed class GoogleAuthentication(
             GoogleConstants.Uris.OidcAuthorizationUrl,
             queryParameters));
     }
+
+    public async Task<TUser> GetUserAsync<TUser>(
+        string accessToken,
+        CancellationToken cancellationToken = default) where TUser : class
+    {
+        logger.LogInformation("Obtaining user info from Google.");
+
+        var request = new HttpRequestMessage(HttpMethod.Get, GoogleConstants.Uris.OidcUserInfoUrl);
+        request.Headers.Authorization = new(GoogleConstants.TokenTypeBearer, accessToken);
+
+        var response = await httpClient.SendAsync(request, cancellationToken);
+        if (response.IsSuccessStatusCode is false)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            logger.LogError("Failed to obtain user info. HTTP Status: {StatusCode}. Response: {Response}",
+                response.StatusCode, errorBody);
+            throw new OAuthException("Failed to obtain user info from Google.");
+        }
+
+        var userInfo = await response.Content.ReadFromJsonAsync<TUser>(cancellationToken);
+        if (userInfo is null)
+            throw new OAuthException("Failed to deserialize user info response.");
+
+        logger.LogInformation("Successfully obtained user info.");
+        return userInfo;
+    }
 }

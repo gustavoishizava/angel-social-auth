@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Angel.Social.Authentication.Core.Configurations;
 using Angel.Social.Authentication.Core.ValueObjects;
 using Angel.Social.Authentication.Google.Services;
@@ -73,9 +74,39 @@ app.MapGet("/revoke", async (IGoogleAuthentication googleAuthentication,
     return Results.Ok("Access token revoked successfully.");
 });
 
+app.MapGet("/user-info", async (IGoogleAuthentication googleAuthentication,
+    [FromQuery] string accessToken) =>
+{
+    return await googleAuthentication.GetUserAsync<GooglerUser>(accessToken);
+});
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+
+record GooglerUser
+{
+    [JsonPropertyName("sub")]
+    public string Sub { get; init; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("given_name")]
+    public string GivenName { get; init; } = string.Empty;
+
+    [JsonPropertyName("family_name")]
+    public string FamilyName { get; init; } = string.Empty;
+
+    [JsonPropertyName("picture")]
+    public string Picture { get; init; } = string.Empty;
+
+    [JsonPropertyName("email")]
+    public string Email { get; init; } = string.Empty;
+
+    [JsonPropertyName("email_verified")]
+    public bool EmailVerified { get; init; }
 }

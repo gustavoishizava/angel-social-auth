@@ -19,4 +19,9 @@ public interface IAuthenticationService<TOAuthRequest, TAccessTokenResponse>
         CancellationToken cancellationToken = default);
 
     Uri GetUri(TOAuthRequest oAuthRequest);
+
+    Task<TUser> GetUserAsync<TUser>(
+        string accessToken,
+        CancellationToken cancellationToken = default)
+        where TUser : class;
 }

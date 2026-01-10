@@ -4,6 +4,7 @@ public static class GoogleConstants
 {
     public const string DefaultAccessType = "offline";
     public const string DefaultResponseType = "code";
+    public const string TokenTypeBearer = "Bearer";
 
     public static class GrantTypes
     {
@@ -16,6 +17,7 @@ public static class GoogleConstants
         public const string OidcAuthorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth";
         public const string OidcTokenUrl = "https://oauth2.googleapis.com/token";
         public const string OidcRevokeTokenUrl = "https://oauth2.googleapis.com/revoke";
+        public const string OidcUserInfoUrl = "https://openidconnect.googleapis.com/v1/userinfo";
     }
 
     public static class QueryParameters

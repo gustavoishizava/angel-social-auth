@@ -4,7 +4,12 @@ public static class GoogleConstants
 {
     public const string DefaultAccessType = "offline";
     public const string DefaultResponseType = "code";
-    public const string GrantTypeAuthorizationCode = "authorization_code";
+
+    public static class GrantTypes
+    {
+        public const string AuthorizationCode = "authorization_code";
+        public const string RefreshToken = "refresh_token";
+    }
 
     public static class Uris
     {
@@ -32,5 +37,6 @@ public static class GoogleConstants
         public const string ClientSecret = "client_secret";
         public const string RedirectUri = "redirect_uri";
         public const string GrantType = "grant_type";
+        public const string RefreshToken = "refresh_token";
     }
 }

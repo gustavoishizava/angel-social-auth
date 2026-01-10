@@ -57,7 +57,13 @@ app.MapGet("/token", async (IGoogleAuthentication googleAuthentication,
         State = "4%2F0ATX87lMfQOmiWgsHxPNOP7n-uwYsrmAI4rTunN_6Y7CL3HrMNPt47jTaZlqKcIudOwLtfQ"
     };
 
-    return await googleAuthentication.AuthenticateAsync(request);
+    return await googleAuthentication.GetAccessTokenAsync(request);
+});
+
+app.MapGet("/refresh", async (IGoogleAuthentication googleAuthentication,
+    [FromQuery] string refreshToken) =>
+{
+    return await googleAuthentication.RefreshAccessTokenAsync(refreshToken);
 });
 
 app.Run();

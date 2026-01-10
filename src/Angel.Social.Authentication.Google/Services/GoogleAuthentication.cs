@@ -19,7 +19,7 @@ public sealed class GoogleAuthentication(
 {
     private readonly ClientCredential clientCredential = options.Get(ClientCredential.GoogleKey);
 
-    public async Task<GoogleAccessTokenResponse> AuthenticateAsync(
+    public async Task<GoogleAccessTokenResponse> GetAccessTokenAsync(
         SignInCode signInCode,
         CancellationToken cancellationToken = default)
     {
@@ -38,9 +38,32 @@ public sealed class GoogleAuthentication(
             new(GoogleConstants.BodyKeys.ClientId, clientCredential.ClientId),
             new(GoogleConstants.BodyKeys.ClientSecret, clientCredential.ClientSecret),
             new(GoogleConstants.BodyKeys.RedirectUri, signInCode.RedirectUri),
-            new(GoogleConstants.BodyKeys.GrantType, GoogleConstants.GrantTypeAuthorizationCode)
+            new(GoogleConstants.BodyKeys.GrantType, GoogleConstants.GrantTypes.AuthorizationCode)
         ]);
 
+        return await GetAccessTokenAsync(bodyRequest, cancellationToken);
+    }
+
+    public async Task<GoogleAccessTokenResponse> RefreshAccessTokenAsync(
+        string refreshToken,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation("Refreshing access token.");
+
+        var bodyRequest = new FormUrlEncodedContent([
+            new(GoogleConstants.BodyKeys.RefreshToken, refreshToken),
+            new(GoogleConstants.BodyKeys.ClientId, clientCredential.ClientId),
+            new(GoogleConstants.BodyKeys.ClientSecret, clientCredential.ClientSecret),
+            new(GoogleConstants.BodyKeys.GrantType, GoogleConstants.GrantTypes.RefreshToken)
+        ]);
+
+        return await GetAccessTokenAsync(bodyRequest, cancellationToken);
+    }
+
+    private async Task<GoogleAccessTokenResponse> GetAccessTokenAsync(
+        FormUrlEncodedContent bodyRequest,
+        CancellationToken cancellationToken)
+    {
         var response = await httpClient.PostAsync(
             GoogleConstants.Uris.OidcTokenUrl,
             bodyRequest,

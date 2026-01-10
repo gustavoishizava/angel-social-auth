@@ -66,6 +66,13 @@ app.MapGet("/refresh", async (IGoogleAuthentication googleAuthentication,
     return await googleAuthentication.RefreshAccessTokenAsync(refreshToken);
 });
 
+app.MapGet("/revoke", async (IGoogleAuthentication googleAuthentication,
+    [FromQuery] string accessToken) =>
+{
+    await googleAuthentication.RevokeAccessTokenAsync(accessToken);
+    return Results.Ok("Access token revoked successfully.");
+});
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)

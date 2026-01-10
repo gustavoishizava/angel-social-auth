@@ -15,6 +15,7 @@ public static class GoogleConstants
     {
         public const string OidcAuthorizationUrl = "https://accounts.google.com/o/oauth2/v2/auth";
         public const string OidcTokenUrl = "https://oauth2.googleapis.com/token";
+        public const string OidcRevokeTokenUrl = "https://oauth2.googleapis.com/revoke";
     }
 
     public static class QueryParameters
@@ -38,5 +39,6 @@ public static class GoogleConstants
         public const string RedirectUri = "redirect_uri";
         public const string GrantType = "grant_type";
         public const string RefreshToken = "refresh_token";
+        public const string Token = "token";
     }
 }

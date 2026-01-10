@@ -14,5 +14,9 @@ public interface IAuthenticationService<TOAuthRequest, TAccessTokenResponse>
         string refreshToken,
         CancellationToken cancellationToken = default);
 
+    Task RevokeAccessTokenAsync(
+        string accessToken,
+        CancellationToken cancellationToken = default);
+
     Uri GetUri(TOAuthRequest oAuthRequest);
 }

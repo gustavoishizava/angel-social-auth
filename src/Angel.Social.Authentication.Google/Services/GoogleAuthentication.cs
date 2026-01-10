@@ -69,7 +69,13 @@ public sealed class GoogleAuthentication(
             bodyRequest,
             cancellationToken);
 
-        response.EnsureSuccessStatusCode();
+        if (response.IsSuccessStatusCode is false)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            logger.LogError("Failed to obtain access token. HTTP Status: {StatusCode}. Response: {Response}",
+                response.StatusCode, errorBody);
+            throw new OAuthException("Failed to obtain access token from Google.");
+        }
 
         var accessToken = await response.Content.ReadFromJsonAsync<GoogleAccessTokenResponse>(cancellationToken);
         if (accessToken is null)
@@ -77,6 +83,30 @@ public sealed class GoogleAuthentication(
 
         logger.LogInformation("Successfully exchanged authorization code for access token.");
         return accessToken;
+    }
+
+    public async Task RevokeAccessTokenAsync(
+        string accessToken,
+        CancellationToken cancellationToken = default)
+    {
+        logger.LogInformation("Revoking access token.");
+
+        var bodyRequest = new FormUrlEncodedContent([
+            new(GoogleConstants.BodyKeys.Token, accessToken)
+        ]);
+
+        var response = await httpClient.PostAsync(
+            GoogleConstants.Uris.OidcRevokeTokenUrl,
+            bodyRequest,
+            cancellationToken);
+
+        if (response.IsSuccessStatusCode is false)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            logger.LogError("Failed to revoke access token. HTTP Status: {StatusCode}. Response: {Response}",
+                response.StatusCode, errorBody);
+            throw new OAuthException("Failed to revoke access token from Google.");
+        }
     }
 
     public Uri GetUri(GoogleOAuthRequestUrl oAuthRequest)

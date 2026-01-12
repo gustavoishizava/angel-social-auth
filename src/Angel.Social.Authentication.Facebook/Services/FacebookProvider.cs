@@ -60,9 +60,31 @@ public sealed class FacebookProvider(
         return accessToken;
     }
 
-    public Task<TUser> GetUserAsync<TUser>(string accessToken, CancellationToken cancellationToken = default) where TUser : class
+    public async Task<TUser> GetUserAsync<TUser>(
+        string accessToken,
+        string[] fields,
+        CancellationToken cancellationToken = default) where TUser : class
     {
-        throw new NotImplementedException();
+        var uri = QueryHelpers.AddQueryString(FacebookConstants.Uris.OidcUserInfoUrl,
+            new Dictionary<string, string?>
+            {
+                { FacebookConstants.QueryParameters.AccessToken, accessToken },
+                { FacebookConstants.QueryParameters.Fields, string.Join(",", fields) }
+            });
+
+        var response = await httpClient.GetAsync(uri, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken);
+            logger.LogError(
+                "Failed to retrieve user info. Status Code: {StatusCode}. Response Body: {ResponseBody}",
+                response.StatusCode, errorBody);
+
+            throw new OAuthException("Failed to retrieve user info.");
+        }
+
+        return await response.Content.ReadFromJsonAsync<TUser>(cancellationToken)
+            ?? throw new OAuthException("Failed to deserialize user info response.");
     }
 
     public Task<FacebookAccessTokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken = default)

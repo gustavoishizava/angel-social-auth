@@ -6,8 +6,9 @@ public static class FacebookConstants
 
     public static class Uris
     {
-        public const string OidcAuthorizationUrl = "https://www.facebook.com/v24.0/dialog/oauth";
-        public const string OidcTokenUrl = "https://graph.facebook.com/v24.0/oauth/access_token";
+        public const string OidcAuthorizationUrl = "https://www.facebook.com/dialog/oauth";
+        public const string OidcTokenUrl = "https://graph.facebook.com/oauth/access_token";
+        public const string OidcUserInfoUrl = "https://graph.facebook.com/me";
     }
 
     public static class QueryParameters
@@ -17,6 +18,8 @@ public static class FacebookConstants
         public const string State = "state";
         public const string ResponseType = "response_type";
         public const string Scope = "scope";
+        public const string AccessToken = "access_token";
+        public const string Fields = "fields";
     }
 
     public static class BodyKeys

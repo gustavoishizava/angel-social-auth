@@ -55,7 +55,7 @@ app.MapGet("/{provider}/auth-uri", (IGoogleProvider googleProvider,
             var facebookRequest = new FacebookOAuthRequestUrl
             {
                 RedirectUri = "https://localhost:3000/sign-in",
-                Scopes = ["email", "public_profile"],
+                Scopes = ["email", "public_profile", "email"],
                 State = "xyzABC123",
                 ResponseType = "code"
             };
@@ -105,10 +105,17 @@ app.MapGet("/revoke", async (IGoogleProvider googleAuthentication,
     return Results.Ok("Access token revoked successfully.");
 });
 
-app.MapGet("/user-info", async (IGoogleProvider googleAuthentication,
+app.MapGet("/{provider}/user-info", async (IGoogleProvider googleAuthentication,
+    IFacebookProvider facebookAuthentication,
+    [FromRoute] string provider,
     [FromQuery] string accessToken) =>
 {
-    return await googleAuthentication.GetUserAsync<GooglerUser>(accessToken);
+    return provider.ToLower() switch
+    {
+        "google" => Results.Ok(await googleAuthentication.GetUserAsync<GooglerUser>(accessToken)),
+        "facebook" => Results.Ok(await facebookAuthentication.GetUserAsync<FacebookUser>(accessToken, new[] { "id", "name", "email" })),
+        _ => Results.BadRequest("Unsupported provider."),
+    };
 });
 
 app.Run();
@@ -140,4 +147,16 @@ record GooglerUser
 
     [JsonPropertyName("email_verified")]
     public bool EmailVerified { get; init; }
+}
+
+record FacebookUser
+{
+    [JsonPropertyName("id")]
+    public string Id { get; init; } = string.Empty;
+
+    [JsonPropertyName("name")]
+    public string Name { get; init; } = string.Empty;
+
+    [JsonPropertyName("email")]
+    public string Email { get; init; } = string.Empty;
 }

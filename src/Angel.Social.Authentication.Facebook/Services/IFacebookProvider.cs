@@ -6,4 +6,9 @@ namespace Angel.Social.Authentication.Facebook.Services;
 public interface IFacebookProvider
     : IExternalProvider<FacebookOAuthRequestUrl, FacebookAccessTokenResponse>
 {
+    Task<TUser> GetUserAsync<TUser>(
+        string accessToken,
+        string[] fields,
+        CancellationToken cancellationToken = default)
+        where TUser : class;
 }

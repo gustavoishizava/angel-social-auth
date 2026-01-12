@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="../Angel.Social.Authentication.Facebook/Angel.Social.Authentication.Facebook.csproj" />
     <ProjectReference Include="../Angel.Social.Authentication.Google/Angel.Social.Authentication.Google.csproj" />
   </ItemGroup>
 </Project>

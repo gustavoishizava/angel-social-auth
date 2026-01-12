@@ -1,6 +1,8 @@
 using System.Text.Json.Serialization;
 using Angel.Social.Authentication.Core.ValueObjects;
 using Angel.Social.Authentication.Extensions;
+using Angel.Social.Authentication.Facebook.Services;
+using Angel.Social.Authentication.Facebook.ValueObjects;
 using Angel.Social.Authentication.Google.Services;
 using Angel.Social.Authentication.Google.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi();
 
 builder.Services.AddGoogleProvider(builder.Configuration, "GoogleCredentials");
+builder.Services.AddFacebookProvider(builder.Configuration, "FacebookCredentials");
 
 var app = builder.Build();
 
@@ -28,35 +31,66 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/test", (IGoogleProvider googleAuthentication) =>
+app.MapGet("/{provider}/auth-uri", (IGoogleProvider googleProvider,
+    IFacebookProvider facebookProvider,
+    [FromRoute] string provider) =>
 {
-    var request = new GoogleOAuthRequestUrl
+    Uri? uri = null;
+
+    switch (provider.ToLower())
     {
-        RedirectUri = "http://localhost:3000",
-        Scopes = ["openid", "profile", "email"],
-        State = "xyzABC123",
-        AccessType = "offline",
-        Prompt = "consent",
-        ResponseType = "code"
-    };
-    var uri = googleAuthentication.GetUri(request);
+        case "google":
+            var request = new GoogleOAuthRequestUrl
+            {
+                RedirectUri = "http://localhost:3000",
+                Scopes = ["openid", "profile", "email"],
+                State = "xyzABC123",
+                AccessType = "offline",
+                Prompt = "consent",
+                ResponseType = "code"
+            };
+            uri = googleProvider.GetUri(request);
+            break;
+        case "facebook":
+            var facebookRequest = new FacebookOAuthRequestUrl
+            {
+                RedirectUri = "https://localhost:3000/sign-in",
+                Scopes = ["email", "public_profile"],
+                State = "xyzABC123",
+                ResponseType = "code"
+            };
+            uri = facebookProvider.GetUri(facebookRequest);
+            break;
+    }
 
-    return uri.ToString();
+    return uri is not null
+        ? Results.Ok(uri.ToString())
+        : Results.BadRequest("Unsupported provider.");
 })
-.WithName("GetWeatherForecast");
+.WithName("Get AuthUri");
 
-app.MapGet("/token", async (IGoogleProvider googleAuthentication,
+app.MapGet("/{provider}/token", async (IGoogleProvider googleProvider,
+    IFacebookProvider facebookProvider,
+    [FromRoute] string provider,
     [FromQuery] string code) =>
 {
     var request = new SignInCode
     {
         Code = code,
-        RedirectUri = "http://localhost:3000",
+        RedirectUri = "https://localhost:3000/sign-in",
         State = "4%2F0ATX87lMfQOmiWgsHxPNOP7n-uwYsrmAI4rTunN_6Y7CL3HrMNPt47jTaZlqKcIudOwLtfQ"
     };
 
-    return await googleAuthentication.GetAccessTokenAsync(request);
-});
+    switch (provider.ToLower())
+    {
+        case "google":
+            return Results.Ok(await googleProvider.GetAccessTokenAsync(request));
+        case "facebook":
+            return Results.Ok(await facebookProvider.GetAccessTokenAsync(request));
+        default:
+            return Results.BadRequest("Unsupported provider.");
+    }
+}).WithName("Get AccessToken");
 
 app.MapGet("/refresh", async (IGoogleProvider googleAuthentication,
     [FromQuery] string refreshToken) =>

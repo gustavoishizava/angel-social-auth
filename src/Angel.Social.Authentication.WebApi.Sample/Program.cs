@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
-using Angel.Social.Authentication.Core.Configurations;
 using Angel.Social.Authentication.Core.ValueObjects;
+using Angel.Social.Authentication.Extensions;
 using Angel.Social.Authentication.Google.Services;
 using Angel.Social.Authentication.Google.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-builder.Services.AddHttpClient<IGoogleProvider, GoogleProvider>();
-builder.Services.Configure<ClientCredential>(
-    ClientCredential.GoogleKey,
-    builder.Configuration.GetSection("GoogleCredentials"));
+builder.Services.AddGoogleProvider(builder.Configuration, "GoogleCredentials");
 
 var app = builder.Build();
 

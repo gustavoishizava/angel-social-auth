@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Angel.Social.Authentication.Google/Angel.Social.Authentication.Google.csproj" />
+    <ProjectReference Include="../Angel.Social.Authentication/Angel.Social.Authentication.csproj" />
   </ItemGroup>
 
 </Project>

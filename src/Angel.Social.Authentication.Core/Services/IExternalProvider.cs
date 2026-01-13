@@ -10,13 +10,5 @@ public interface IExternalProvider<TOAuthRequest, TOAuthResponse>
         SignInCode signInCode,
         CancellationToken cancellationToken = default);
 
-    Task<TOAuthResponse> RefreshAccessTokenAsync(
-        string refreshToken,
-        CancellationToken cancellationToken = default);
-
-    Task RevokeAccessTokenAsync(
-        string accessToken,
-        CancellationToken cancellationToken = default);
-
     Uri GetUri(TOAuthRequest oAuthRequest);
 }

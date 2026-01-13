@@ -87,16 +87,6 @@ public sealed class FacebookProvider(
             ?? throw new OAuthException("Failed to deserialize user info response.");
     }
 
-    public Task<FacebookAccessTokenResponse> RefreshAccessTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task RevokeAccessTokenAsync(string accessToken, CancellationToken cancellationToken = default)
-    {
-        throw new NotImplementedException();
-    }
-
     public Uri GetUri(FacebookOAuthRequestUrl oAuthRequest)
     {
         var queryParameters = oAuthRequest.BuildParameters(clientCredential.ClientId);

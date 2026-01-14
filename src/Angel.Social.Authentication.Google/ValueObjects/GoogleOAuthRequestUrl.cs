@@ -12,6 +12,12 @@ public sealed record GoogleOAuthRequestUrl : OAuthRequest
     public const string ScopeSeparator = " ";
 
     /// <summary>
+    /// A list of scopes that identify the resources that your application 
+    /// could access on the user's behalf.
+    /// </summary>
+    public required string[] Scopes { get; set; } = [];
+
+    /// <summary>
     /// Indicates whether your application can refresh access tokens when the user is not present at the browser. 
     /// Valid parameter values are online, which is the default value, and offline.
     /// </summary>

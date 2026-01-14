@@ -11,6 +11,12 @@ public sealed record FacebookOAuthRequestUrl : OAuthRequest
 {
     public const string ScopeSeparator = ",";
 
+    /// <summary>
+    /// A list of scopes that identify the resources that your application 
+    /// could access on the user's behalf.
+    /// </summary>
+    public required string[] Scopes { get; set; } = [];
+
     public FacebookOAuthRequestUrl()
     {
         ResponseType = FacebookConstants.DefaultResponseType;

@@ -11,12 +11,6 @@ public abstract record OAuthRequest
     public required string RedirectUri { get; set; }
 
     /// <summary>
-    /// A list of scopes that identify the resources that your application 
-    /// could access on the user's behalf.
-    /// </summary>
-    public required string[] Scopes { get; set; }
-
-    /// <summary>
     /// Determines whether the response data included when the redirect back 
     /// to the app occurs is in URL parameters or fragments.
     /// </summary>

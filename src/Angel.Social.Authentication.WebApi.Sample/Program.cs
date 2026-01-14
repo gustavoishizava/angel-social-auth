@@ -5,6 +5,8 @@ using Angel.Social.Authentication.Facebook.Services;
 using Angel.Social.Authentication.Facebook.ValueObjects;
 using Angel.Social.Authentication.Google.Services;
 using Angel.Social.Authentication.Google.ValueObjects;
+using Angel.Social.Authentication.MercadoLivre.Services;
+using Angel.Social.Authentication.MercadoLivre.ValueObjects;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,7 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddGoogleProvider(builder.Configuration, "GoogleCredentials");
 builder.Services.AddFacebookProvider(builder.Configuration, "FacebookCredentials");
+builder.Services.AddMercadoLivreProvider(builder.Configuration, "MercadoLivreCredentials");
 
 var app = builder.Build();
 
@@ -33,6 +36,7 @@ var summaries = new[]
 
 app.MapGet("/{provider}/auth-uri", (IGoogleProvider googleProvider,
     IFacebookProvider facebookProvider,
+    IMercadoLivreProvider mercadoLivreProvider,
     [FromRoute] string provider) =>
 {
     Uri? uri = null;
@@ -61,6 +65,15 @@ app.MapGet("/{provider}/auth-uri", (IGoogleProvider googleProvider,
             };
             uri = facebookProvider.GetUri(facebookRequest);
             break;
+        case "mercadolivre":
+            var mercadoLivreRequest = new MercadoLivreOAuthRequestUrl
+            {
+                RedirectUri = "https://red-pebble-00508c50f.4.azurestaticapps.net",
+                State = "xyzABC123",
+                ResponseType = "code"
+            };
+            uri = mercadoLivreProvider.GetUri(mercadoLivreRequest);
+            break;
     }
 
     return uri is not null
@@ -71,13 +84,14 @@ app.MapGet("/{provider}/auth-uri", (IGoogleProvider googleProvider,
 
 app.MapGet("/{provider}/token", async (IGoogleProvider googleProvider,
     IFacebookProvider facebookProvider,
+    IMercadoLivreProvider mercadoLivreProvider,
     [FromRoute] string provider,
     [FromQuery] string code) =>
 {
     var request = new SignInCode
     {
         Code = code,
-        RedirectUri = "https://localhost:3000/sign-in",
+        RedirectUri = "https://red-pebble-00508c50f.4.azurestaticapps.net",
         State = "4%2F0ATX87lMfQOmiWgsHxPNOP7n-uwYsrmAI4rTunN_6Y7CL3HrMNPt47jTaZlqKcIudOwLtfQ"
     };
 
@@ -87,15 +101,27 @@ app.MapGet("/{provider}/token", async (IGoogleProvider googleProvider,
             return Results.Ok(await googleProvider.GetAccessTokenAsync(request));
         case "facebook":
             return Results.Ok(await facebookProvider.GetAccessTokenAsync(request));
+        case "mercadolivre":
+            return Results.Ok(await mercadoLivreProvider.GetAccessTokenAsync(request));
         default:
             return Results.BadRequest("Unsupported provider.");
     }
 }).WithName("Get AccessToken");
 
-app.MapGet("/refresh", async (IGoogleProvider googleAuthentication,
+app.MapGet("/{provider}/refresh", async (IGoogleProvider googleProvider,
+    IMercadoLivreProvider mercadoLivreProvider,
+    [FromRoute] string provider,
     [FromQuery] string refreshToken) =>
 {
-    return await googleAuthentication.RefreshAccessTokenAsync(refreshToken);
+    switch (provider.ToLower())
+    {
+        case "google":
+            return Results.Ok(await googleProvider.RefreshAccessTokenAsync(refreshToken));
+        case "mercadolivre":
+            return Results.Ok(await mercadoLivreProvider.RefreshAccessTokenAsync(refreshToken));
+        default:
+            return Results.BadRequest("Unsupported provider.");
+    }
 });
 
 app.MapGet("/revoke", async (IGoogleProvider googleAuthentication,

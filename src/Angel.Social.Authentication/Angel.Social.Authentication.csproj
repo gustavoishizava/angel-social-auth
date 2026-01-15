@@ -14,14 +14,16 @@
     <RepositoryUrl>https://github.com/gustavoishizava/angel-social-auth</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.2" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="10.0.1" />
     <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="../Angel.Social.Authentication.Facebook/Angel.Social.Authentication.Facebook.csproj" />
-    <ProjectReference Include="../Angel.Social.Authentication.Google/Angel.Social.Authentication.Google.csproj" />
-    <ProjectReference Include="../Angel.Social.Authentication.MercadoLivre/Angel.Social.Authentication.MercadoLivre.csproj" />
+    <Folder Include="Core/" />
+    <Folder Include="Facebook/" />
+    <Folder Include="Google/" />
+    <Folder Include="MercadoLivre/" />
   </ItemGroup>
 </Project>
